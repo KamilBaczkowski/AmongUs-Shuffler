@@ -1,0 +1,12 @@
+# Don't copy the compiled files onto the env, this doesn't make sense.
+target/
+# Don't copy the Dockerfile itself.
+Dockerfile
+# And the .dockerignore too test.
+.dockerignore
+# Don't copy tests over
+tests/
+# Scripts shouldn't be needed too
+scripts/
+# Migrations?
+migrations/
