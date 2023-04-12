@@ -164,10 +164,6 @@ impl Bot {
             }
         }
 
-        let store = ctx.data.read().await;
-        let games = store.get::<Games>().unwrap().read().await;
-        info!("Existing games: {games:?}");
-
         // Debug code that I use to not spam DMs, and just spam a channel.
         // let mut message = String::from("");
         // for (player, avatar) in &pairs {
