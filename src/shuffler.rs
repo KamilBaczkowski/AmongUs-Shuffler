@@ -1,12 +1,13 @@
 use rand::seq::SliceRandom;
-use serenity::model::prelude::UserId;
+
+use crate::game::{Players, Pairs};
 
 #[derive(Debug)]
 pub enum ShuffleError {
     TooFewPeople,
     DuplicatesDetected,
 }
-pub fn shuffle_people(people: &Vec<UserId>) -> Result<Vec<(UserId, UserId)>, ShuffleError> {
+pub fn shuffle_people(people: &Players) -> Result<Pairs, ShuffleError> {
     let mut result = vec!();
     if people.len() < 2 {
         return Err(ShuffleError::TooFewPeople);
@@ -36,9 +37,8 @@ pub fn shuffle_people(people: &Vec<UserId>) -> Result<Vec<(UserId, UserId)>, Shu
 #[cfg(test)]
 mod tests {
     use rand::{distributions::Slice, Rng};
-    use serenity::model::{prelude::UserId};
 
-    use crate::parser::ID_LENGTH;
+    use crate::{parser::ID_LENGTH, game::{Players, Pairs}};
 
     use super::{shuffle_people, ShuffleError};
 
@@ -126,7 +126,7 @@ mod tests {
     #[test]
     fn test_shuffle_errors_on_duplicate() -> Result<(), String> {
         // let mut ids = vec!();
-        let mut ids: Vec<UserId> = generate_user_ids(3).into();
+        let mut ids: Players = generate_user_ids(3).into();
         ids.push(ids[0]);
 
         match shuffle_people(&ids) {
@@ -138,7 +138,7 @@ mod tests {
 
     // No 0 to not generate numbers with leading 0, simplifies a lot of things.
     const DIGITS: [char; 9] = ['1','2','3','4','5','6','7','8','9'];
-    fn generate_user_ids(count: usize) -> Vec<UserId> {
+    fn generate_user_ids(count: usize) -> Players {
         let mut ids = vec!();
         let distribution = Slice::new(&DIGITS).unwrap();
         let rng = &mut rand::thread_rng();
@@ -160,7 +160,7 @@ mod tests {
         TooFewPairs,
     }
     fn check_pairs_validity(
-        pairs: Vec<(UserId, UserId)>, expected_pair_count: usize
+        pairs: Pairs, expected_pair_count: usize
     ) -> Result<(), PairValidityError> {
         if pairs.len() != expected_pair_count {
             return Err(PairValidityError::TooFewPairs);

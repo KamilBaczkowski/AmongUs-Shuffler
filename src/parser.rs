@@ -3,6 +3,8 @@ use std::str::Chars;
 use serenity::model::prelude::UserId;
 use tracing::{info, debug};
 
+use crate::game::Players;
+
 #[derive(Debug)]
 pub enum ShuffleParseError {
     MessageTooShort,
@@ -17,7 +19,7 @@ pub const ID_LENGTH: usize = MENTION_LENGTH - 3; // Remove <, @ and > from the a
 #[tracing::instrument(
     name = "Parsing message",
 )]
-pub fn parse_shuffle_message(message: String) -> Result<Vec<UserId>, ShuffleParseError> {
+pub fn parse_shuffle_message(message: String) -> Result<Players, ShuffleParseError> {
     if message.len() < SHUFFLE_KEYWORD_LENGTH {
         debug!(length = message.len(), "Message is too short.");
         return Err(ShuffleParseError::MessageTooShort);
@@ -32,7 +34,7 @@ pub fn parse_shuffle_message(message: String) -> Result<Vec<UserId>, ShufflePars
 
     info!(message = debug(&message), "Message will be processed.");
 
-    let mut people: Vec<UserId> = vec!();
+    let mut people: Players = vec!();
     loop {
         let next = message.next();
         if next.is_none() {
