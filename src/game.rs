@@ -14,6 +14,7 @@ impl TypeMapKey for Games {
 pub struct Game {
     owner: UserId,
     channel: ChannelId,
+    pairs: Pairs,
 }
 
 impl Game {
@@ -21,15 +22,20 @@ impl Game {
         self.owner
     }
 
+    pub fn get_pairs(self) -> Pairs {
+        self.pairs
+    }
+
     pub fn get_channel(&self) -> ChannelId {
         self.channel
     }
 }
 
-pub fn new_game(owner: UserId, channel: ChannelId) -> Game {
+pub fn new_game(owner: UserId, channel: ChannelId, pairs: Pairs) -> Game {
     Game {
         owner,
         channel,
+        pairs,
     }
 }
 
